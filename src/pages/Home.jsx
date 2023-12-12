@@ -29,12 +29,17 @@ const Home = () => {
     setData(data.map(item => item.id === id ? { ...item, text: text, checked: checked } : item));
   }
 
+  //완료 된 todo 삭제
+  const onClear = () => {
+    setData(data.filter((item) => !item.checked));
+  }
+
   return (
     <>
       <ToDoHeader />
       <ToDo>
         <ToDoInsert onAdd={onAdd} />
-        <ToDoList data={data} onDel={onDel} onMod={onMod} type="All" />
+        <ToDoList data={data} onDel={onDel} onMod={onMod} onClear={onClear} type="All" />
       </ToDo>
       <ToDoFooter />
     </>

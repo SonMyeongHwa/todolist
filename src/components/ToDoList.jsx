@@ -2,14 +2,10 @@ import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import ToDoListItem from "./ToDoListItem";
 
-const ToDoList = ({ data, onDel, onMod, type }) => {
-  const [itemCount, setItemCount] = useState(1);
+const ToDoList = ({ data, onDel, onMod, onClear, type }) => {
+  const [activeCount, setActiveCount] = useState(0);
   const [selectedType, setSelectedType] = useState(type);
   const [filteredData, setFilteredData] = useState(data);
-
-  const handleDelete = () => {
-    console.log("삭제")
-  }
 
   useEffect(() => {
     const fn = () => {
@@ -22,9 +18,12 @@ const ToDoList = ({ data, onDel, onMod, type }) => {
           return data;
       }
     };
-
     setFilteredData(fn());
   }, [data, selectedType]);
+
+  useEffect(() => {
+    setActiveCount(data.filter((item) => item.checked === false).length);
+  }, [data]);
 
   return (
     <>
@@ -36,7 +35,7 @@ const ToDoList = ({ data, onDel, onMod, type }) => {
       {data.length > 0 && (
         <Footer>
           <CountItem>
-            {itemCount} item{itemCount > 1 ? "s" : ""} left
+            {activeCount} item{activeCount > 1 ? "s" : ""} left
           </CountItem>
           <TypeWrap>
             <TypeButton>
@@ -67,7 +66,9 @@ const ToDoList = ({ data, onDel, onMod, type }) => {
               </TypeLink>
             </TypeButton>
           </TypeWrap>
-          <ClearButton onClick={handleDelete}>Clear Completed</ClearButton>
+          {data.length !== activeCount && (
+            <ClearButton onClick={onClear}>Clear Completed</ClearButton>
+          )}
         </Footer>
       )}
     </>

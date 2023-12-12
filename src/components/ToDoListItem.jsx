@@ -10,6 +10,11 @@ const ToDoListItem = ({ item, onDel, onMod }) => {
   const [isChecked, setIsChecked] = useState(checked);
   const [isEdit, setIsEdit] = useState(false);
   const [insertText, setInsetText] = useState(text);
+  
+  useEffect(() => {
+    setIsChecked(checked);
+    setInsetText(text);
+  }, [item]);
 
   useEffect(() => {
     if (isEdit && inputRef.current) {
@@ -22,17 +27,11 @@ const ToDoListItem = ({ item, onDel, onMod }) => {
     }
   }, [isEdit]);
 
-  useEffect(() => {
-    setIsChecked(checked);
-  }, [checked]);
-  
   //todo 체크
   const handleCheck = () => {
-    setIsChecked((prevCheck) => {
-      onMod(id, insertText, !prevCheck);
-      return !prevCheck;
-    });
-  }
+    setIsChecked((prevCheck) => !prevCheck);
+    onMod(id, insertText, !isChecked);
+  };
 
   //todo 더블클릭 시 수정
   const handleDoubleClick = (e) => {
