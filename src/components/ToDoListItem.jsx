@@ -21,17 +21,22 @@ const ToDoListItem = ({ item, onDel, onMod }) => {
       );
     }
   }, [isEdit]);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
   
   //todo 체크
   const handleCheck = () => {
-    setIsChecked(prevCheck => !prevCheck);
-    onMod(id, insertText, !isChecked);
+    setIsChecked((prevCheck) => {
+      onMod(id, insertText, !prevCheck);
+      return !prevCheck;
+    });
   }
 
   //todo 더블클릭 시 수정
   const handleDoubleClick = (e) => {
     setIsEdit(true);
-    window.getSelection().removeAllRanges(); //더블클릭 시 input 드래그 방지
   }
 
   //todo input 수정
@@ -138,6 +143,7 @@ const Insert = styled.input`
   border: 1px solid #999;
   outline: none;
   box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  user-select: none; //드래그 방지
 `;
 
 const Delete = styled(MdClose)`

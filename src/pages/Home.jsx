@@ -34,7 +34,7 @@ const Home = () => {
       <ToDoHeader />
       <ToDo>
         <ToDoInsert onAdd={onAdd} />
-        <ToDoList data={data} onDel={onDel} onMod={onMod} />
+        <ToDoList data={data} onDel={onDel} onMod={onMod} type="All" />
       </ToDo>
       <ToDoFooter />
     </>

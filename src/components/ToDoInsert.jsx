@@ -59,6 +59,7 @@ const Insert = styled.input`
   font-size: 24px;
   line-height: 1.4em;
   color: inherit;
+  font-weight: inherit;
 
   &::placeholder {
     color: #e8e8e8;

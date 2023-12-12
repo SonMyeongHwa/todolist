@@ -1,31 +1,74 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import ToDoListItem from "./ToDoListItem";
 
-const ToDoList = ({ data, onDel, onMod }) => {
+const ToDoList = ({ data, onDel, onMod, type }) => {
   const [itemCount, setItemCount] = useState(1);
+  const [selectedType, setSelectedType] = useState(type);
+  const [filteredData, setFilteredData] = useState(data);
 
   const handleDelete = () => {
     console.log("삭제")
   }
 
+  useEffect(() => {
+    const fn = () => {
+      switch (selectedType) {
+        case "Active":
+          return data.filter((item) => item.checked === false);
+        case "Completed":
+          return data.filter((item) => item.checked === true);
+        default:
+          return data;
+      }
+    };
+
+    setFilteredData(fn());
+  }, [data, selectedType]);
+
   return (
     <>
       <List>
-        {data.map((item, index) => (
+        {filteredData.map((item, index) => (
           <ToDoListItem key={index} item={item} onDel={onDel} onMod={onMod} />
         ))}
       </List>
       {data.length > 0 && (
         <Footer>
-        <CountItem>{itemCount} item{itemCount > 1 ? "s" : ""} left</CountItem>
-        <TypeWrap>
-            <TypeButton><TypeLink href="#/" className={"selected"}>All</TypeLink></TypeButton>
-          <TypeButton><TypeLink href="#/active">Active</TypeLink></TypeButton>
-          <TypeButton><TypeLink href="#/completed">Completed</TypeLink></TypeButton>
-        </TypeWrap>
-        <ClearButton onClick={handleDelete}>Clear Completed</ClearButton>
-      </Footer>
+          <CountItem>
+            {itemCount} item{itemCount > 1 ? "s" : ""} left
+          </CountItem>
+          <TypeWrap>
+            <TypeButton>
+              <TypeLink
+                href="#/"
+                className={selectedType === "All" ? "selected" : ""}
+                onClick={() => setSelectedType("All")}
+              >
+                All
+              </TypeLink>
+            </TypeButton>
+            <TypeButton>
+              <TypeLink
+                href="#/active"
+                className={selectedType === "Active" ? "selected" : ""}
+                onClick={() => setSelectedType("Active")}
+              >
+                Active
+              </TypeLink>
+            </TypeButton>
+            <TypeButton>
+              <TypeLink
+                href="#/completed"
+                className={selectedType === "Completed" ? "selected" : ""}
+                onClick={() => setSelectedType("Completed")}
+              >
+                Completed
+              </TypeLink>
+            </TypeButton>
+          </TypeWrap>
+          <ClearButton onClick={handleDelete}>Clear Completed</ClearButton>
+        </Footer>
       )}
     </>
   );
